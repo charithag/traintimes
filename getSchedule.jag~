@@ -1,0 +1,55 @@
+<%
+function toTitleCase(str)
+{
+    return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+}
+
+var at = request.getParameter('at');
+var go = request.getParameter('go');
+var from = request.getParameter('from');
+var to = request.getParameter('to');
+var day = request.getParameter('day');
+
+from += ":00:00";
+to += ":00:00";
+var initial = day.split('/');
+day = [ initial[2], initial[0], initial[1] ].join('-');
+
+var dTime = new Date();
+var h = dTime.getHours();
+var m = dTime.getMinutes();
+var cTime = h + ":" + m + ":00";
+
+var trainList = get("http://m.icta.lk/services/railwayservice/getSchedule.php", { lang : "en", startStationCode : at, endStationCode : go, arrivalTime : from, depatureTime : to, currentDate : day, currentTime : cTime},"json");
+var trains = trainList.data.trains;
+
+if(trains.length == 0){ %>
+No Trains found for given criteria!
+<%} else { %>
+<table border="1">
+	<tr align="center">
+		<th>Arrival to <%=toTitleCase(trains[0].startStationName)%></th>
+		<th>Departure from <%=toTitleCase(trains[0].startStationName)%></th>
+		<th>Train Runs to</th>
+		<th>Reaching Time to <%=toTitleCase(trains[0].endStationName)%></th>
+		<th>Available days of the week</th>
+		<th>Type of the Train</th>
+		<th>Train No</th>
+	</tr>
+	<% 
+	for (var i=0; i < trains.length; i++){
+		var train = trains[i]; 
+	%>
+	<tr align="center">
+		<td><%=train.arrivalTime%></td>
+		<td><%=train.depatureTime%></td>
+		<td><%=toTitleCase(train.toTrStationName)%></td>
+		<td><%=train.arrivalAtDestinationTime%></td>
+		<td><%=toTitleCase(train.fDescription)%></td>
+		<td><%=toTitleCase(train.tyDescription)%></td>
+		<td><%=train.name%></td>
+	</tr>
+	<%}%>
+</table>
+<%}%>
+
