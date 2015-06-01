@@ -6,8 +6,9 @@ function toTitleCase(str)
     return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
 }
 
-var stationList = get("http://m.icta.lk/services/railwayservice/getAllStations.php", { lang : "en"},"json");
-var stations = stationList.data.stations;
+var stationList = get("http://m.icta.lk/services/railwayservicev2/station/getAll", { lang : "en"});
+stationList = JSON.parse(stationList.data);
+var stations = stationList.RESULTS.stationList;
 %>
 <meta charset="utf-8" />
 <title>Train Times Sri Lanka</title>
@@ -54,7 +55,7 @@ function getSchedule(){
 		<br>
 		<select id="at" style="width:190px;">
 		<% for (var i=0; i < stations.length; i++){ %>
-		  <option value="<%=stations[i].stationCode%>"><%=toTitleCase(stations[i].stationName)%></option>
+		  <option value="<%=stations[i].stationID%>"><%=toTitleCase(stations[i].stationName)%></option>
 		<%}%>
 		</select>
 		<br><br>
@@ -62,7 +63,7 @@ function getSchedule(){
 		<br>
 		<select id="goto" style="width:190px;">
 		<% for (var i=0; i < stations.length; i++){ %>
-		  <option value="<%=stations[i].stationCode%>"><%=toTitleCase(stations[i].stationName)%></option>
+		  <option value="<%=stations[i].stationID%>"><%=toTitleCase(stations[i].stationName)%></option>
 		<%}%>
 		</select>
 		<br><br>
@@ -106,13 +107,13 @@ function getSchedule(){
 		</br>		
 	</div>
 	</td>
-	<td width = "700px" valign="center" align="center" style="background-color:#99FF66;">
+	<td width = "800px" valign="center" align="center" style="background-color:#99FF66;">
 		<div id= "results">
 		Select your criteria to find train
 		</div>
 	</td>
 	</table>
 	<h4 style="text-align:center;"> charithag@wso2.com </h4>
-	<h5 style="text-align:center;"> 4-Jan-2013 </h5>
+	<h5 style="text-align:center;"> 1-June-2015 </h5>
 </body>
 </html>

@@ -1,4 +1,6 @@
 <%
+var log = new Log();
+
 function toTitleCase(str)
 {
     return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
@@ -20,9 +22,9 @@ var h = dTime.getHours();
 var m = dTime.getMinutes();
 var cTime = h + ":" + m + ":00";
 
-var trainList = get("http://m.icta.lk/services/railwayservice/getSchedule.php", { lang : "en", startStationCode : at, endStationCode : go, arrivalTime : from, depatureTime : to, currentDate : day, currentTime : cTime},"json");
-var trains = trainList.data.trains;
-
+var trainList = get("http://m.icta.lk/services/railwayservicev2/train/searchTrain", { lang : "en", startStationID : at, endStationID : go, startTime : from, endTime : to, searchDate : day},"json");
+var trains = trainList.data.RESULTS.directTrains.trainsList;
+log.info(trains);
 if(trains.length == 0){ %>
 No Trains found for given criteria!
 <%} else { %>
@@ -43,11 +45,11 @@ No Trains found for given criteria!
 	<tr align="center">
 		<td><%=train.arrivalTime%></td>
 		<td><%=train.depatureTime%></td>
-		<td><%=toTitleCase(train.toTrStationName)%></td>
-		<td><%=train.arrivalAtDestinationTime%></td>
-		<td><%=toTitleCase(train.fDescription)%></td>
-		<td><%=toTitleCase(train.tyDescription)%></td>
-		<td><%=train.name%></td>
+		<td><%=toTitleCase(train.finalStationName)%></td>
+		<td><%=train.arrivalTimeEndStation%></td>
+		<td><%=toTitleCase(train.trainFrequncy)%></td>
+		<td><%=toTitleCase(train.trainType)%></td>
+		<td><%=toTitleCase(train.trainName)%></td>
 	</tr>
 	<%}%>
 </table>
